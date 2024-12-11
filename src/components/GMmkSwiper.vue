@@ -14,8 +14,8 @@ const onChange: UniHelper.SwiperOnChange = (e) => {
   <view class="carousel">
     <swiper :circular="true" :autoplay="false" :interval="3000" @change="onChange">
       <swiper-item v-for="item in list" :key="item.id">
-        <navigator :url="item.herfUrl" hover-class="none" class="navigator">
-          <image mode="aspectFill" class="image" :src="item.imgUrl" />
+        <navigator :url="item.herf" hover-class="none" class="navigator">
+          <image mode="aspectFill" class="image" :src="item.image" />
         </navigator>
       </swiper-item>
     </swiper>

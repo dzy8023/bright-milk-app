@@ -110,7 +110,7 @@ export default [
       'vue/html-self-closing': [
         'error',
         {
-          html: { void: 'always', normal: 'always', component: 'always' },
+          html: { void: 'always', normal: 'always', component: 'any' },
           svg: 'always',
           math: 'always',
         },
