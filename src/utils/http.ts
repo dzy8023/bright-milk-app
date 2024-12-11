@@ -1,6 +1,6 @@
 import { useMemberStore } from '@/store'
 
-const baseURL = import.meta.env.VITE_APP_API_URL
+const baseUrl = import.meta.env.VITE_APP_API_URL
 const timeout = import.meta.env.VITE_APP_API_TIMEOUT
 
 //拦截器配置
@@ -9,7 +9,8 @@ const httpInterceptor = {
   invoke(options: UniApp.RequestOptions) {
     //1.非http开头需拼接地址
     if (!options.url.startsWith('http')) {
-      options.url = baseURL + options.url
+      options.url = baseUrl + options.url
+      console.log('拼接地址', options.url)
     }
     //2.设置超时时间
     options.timeout = timeout
@@ -47,7 +48,7 @@ uni.addInterceptor('uploadFile', httpInterceptor)
 type Data<T> = {
   code: string
   msg: string
-  data: T
+  result: T
 }
 
 export const http = <T>(options: UniApp.RequestOptions) => {

@@ -105,7 +105,7 @@ export default [
     rules: {
       ...pluginVue.configs['vue3-recommended'].rules,
       'vue/no-v-html': 'off', // 允许 v-html
-      'vue/require-default-prop': 'off', // 允许没有默认值的 prop
+      'vue/require-default-prop': 'warn', // 允许没有默认值的 prop
       'vue/multi-word-component-names': 'off', // 关闭组件名称多词要求
       'vue/html-self-closing': [
         'error',

@@ -1,46 +1,47 @@
+<script setup lang="ts">
+import { BannerItem } from '@/types/home'
+import CustomNavbar from './components/CustomNavbar.vue'
+import { ref } from 'vue'
+import { getHomeBannerListApi } from '@/services/home'
+//获取屏幕边界到安全区的距离
+let top = 0
+// #ifdef MP-WEIXIN
+top = wx.getWindowInfo().safeArea.top
+// #endif
+// #ifndef MP-WEIXIN
+top = uni.getSystemInfoSync().safeAreaInsets?.top || 0
+// #endif
+const bannerList = ref<BannerItem[]>([])
+const getHomeBannerListData = async () => {
+  const res = await getHomeBannerListApi()
+  console.log(res)
+  bannerList.value = res.result
+}
+getHomeBannerListData()
+</script>
+
 <template>
-  <view class="content">
-    <image class="logo" src="@/static/logo.png" />
-    <view class="text-area">
-      <text class="title">{{ title }}</text>
-    </view>
+  <view class="viewport">
+    <CustomNavbar :top="top" />
+    <scroll-view class="scroll-view">
+      <GMmkSwiper :list="bannerList" />
+    </scroll-view>
   </view>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue'
-const title = ref('Hello')
-console.log(title.value)
-uni.showToast({
-  title: 'Hello',
-  icon: 'none',
-})
-</script>
-
-<style>
-.content {
+<style lang="scss">
+page {
+  background-color: #f8f8f8;
+  height: 100%;
+  overflow: hidden;
+}
+.viewport {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  justify-items: center;
 }
-
-.logo {
-  height: 200rpx;
-  width: 200rpx;
-  margin-top: 200rpx;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 50rpx;
-}
-
-.text-area {
-  display: flex;
-  justify-content: center;
-}
-
-.title {
-  font-size: 36rpx;
-  color: #8f8f94;
+.scroll-view {
+  flex: 1;
 }
 </style>
