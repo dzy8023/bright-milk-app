@@ -8,7 +8,7 @@ import { http } from '@/utils/http'
  * @param distributionSite
  * @returns
  */
-export const getHomeBannerApi = (distributionSite: string = '1') => {
+export const getHomeBannerApi = (distributionSite: number = 1) => {
   return http<BannerItem[]>({
     method: 'GET',
     url: '/home/banner',

@@ -121,7 +121,7 @@
   </view>
 </template>
 <style lang="scss">
-@import '../styles/HotPanel.scss';
+@use '../styles/HotPanel.scss';
 .sk-transparent {
   color: transparent !important;
 }

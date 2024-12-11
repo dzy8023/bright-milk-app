@@ -1,6 +1,6 @@
 export type GoodItem = {
   /**
-   * ID 编号
+   * spu_id
    */
   id: string
   /**
@@ -8,19 +8,31 @@ export type GoodItem = {
    */
   categoryName: string
   /**
-   * 商品描述
-   */
-  desc: string
-  /**
-   * 商品图片
+   * 商品展示图
    */
   image: string
   /**
-   * 名称
+   * 商品名称
    */
   name: string
   /**
    * 商品展示价格
    */
   price: number
+  /**
+   * 商品销量展示
+   */
+  sales?: number
+  /**
+   * 商品折扣展示
+   */
+  discount?: number
+  /**
+   * 商品快速展示属性值
+   */
+  attrText?: string
+  /**
+   * 商品描述
+   */
+  desc?: string
 }
