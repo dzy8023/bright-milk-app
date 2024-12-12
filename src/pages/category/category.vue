@@ -92,4 +92,13 @@ const subCategoryList = computed(() => {
 </template>
 <style lang="scss">
 @use './styles/category.scss';
+page {
+  height: 100%;
+  overflow: hidden;
+}
+.viewport {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 </style>

@@ -100,4 +100,15 @@ onLoad(() => {
 
 <style lang="scss">
 @use './styles/hot.scss';
+page {
+  height: 100%;
+  background-color: #f4f4f4;
+}
+.viewport {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 180rpx 0 0;
+  position: relative;
+}
 </style>
