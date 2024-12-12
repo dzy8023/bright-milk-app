@@ -149,7 +149,9 @@
   </view>
 </template>
 <style lang="scss">
+/* #ifndef MP-WEIXIN */
 @use '../styles/category.scss';
+/* #endif */
 .sk-transparent {
   color: transparent !important;
 }

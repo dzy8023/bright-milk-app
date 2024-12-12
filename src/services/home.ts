@@ -1,5 +1,5 @@
 import type { GoodItem } from '@/types/good'
-import type { BannerItem, HotItem } from '@/types/home'
+import type { BannerItem, HomeHotItem } from '@/types/home'
 import type { PageQuery, PageResult } from '@/types/pageQuery'
 import { http } from '@/utils/http'
 
@@ -23,7 +23,7 @@ export const getHomeBannerApi = (distributionSite: number = 1) => {
  * @returns
  */
 export const getHomeHotApi = () => {
-  return http<HotItem[]>({
+  return http<HomeHotItem[]>({
     method: 'GET',
     url: '/home/hot/mutli',
   })

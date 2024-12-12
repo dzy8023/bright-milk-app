@@ -121,7 +121,11 @@
   </view>
 </template>
 <style lang="scss">
+/* #ifndef MP-WEIXIN */
+@use '@/components/styles/GMmkSwiper.scss';
 @use '../styles/HotPanel.scss';
+/* #endif */
+
 .sk-transparent {
   color: transparent !important;
 }

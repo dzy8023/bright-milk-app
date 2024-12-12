@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BannerItem, HotItem } from '@/types/home'
+import { BannerItem, HomeHotItem } from '@/types/home'
 import CustomNavbar from './components/CustomNavbar.vue'
 import HotPanel from './components/HotPanel.vue'
 import { ref } from 'vue'
@@ -16,7 +16,7 @@ top = wx.getWindowInfo().safeArea.top
 top = uni.getSystemInfoSync().safeAreaInsets?.top || 0
 // #endif
 const bannerList = ref<BannerItem[]>([])
-const hotList = ref<HotItem[]>([])
+const hotList = ref<HomeHotItem[]>([])
 const isInit = ref(true)
 const loading = ref(false)
 
@@ -71,7 +71,7 @@ onLoad(async () => {
     >
       <PageSkeleton v-if="isInit" />
       <template v-else>
-        <GMmkSwiper :list="bannerList" />
+        <GMmkSwiper style="height: 30%" :list="bannerList" />
         <HotPanel :list="hotList" />
         <GMmkGuess ref="guessRef" />
       </template>

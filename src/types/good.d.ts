@@ -6,7 +6,7 @@ export type GoodItem = {
   /**
    * 分类名称
    */
-  categoryName: string
+  categoryName?: string
   /**
    * 商品展示图
    */

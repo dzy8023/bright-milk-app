@@ -2,7 +2,7 @@ export type BannerItem = {
   /**
    * 跳转链接
    */
-  herf: string
+  href: string
   /**
    * ID 编号
    */
@@ -17,7 +17,7 @@ export type BannerItem = {
   type: number
 }
 
-export type HotItem = {
+export type HomeHotItem = {
   /**
    * 推荐说明
    */
@@ -25,14 +25,14 @@ export type HotItem = {
   /**
    * ID 编号
    */
-  id: string
+  id: number
   images: string[]
-  /**
-   * 跳转链接
-   */
-  target: string
   /**
    * 推荐标题
    */
   title: string
+  /**
+   * 跳转链接
+   */
+  href: string
 }
