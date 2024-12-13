@@ -17,7 +17,6 @@ export const useMemberStore = defineStore(
     const clearProfile = () => {
       profile.value = undefined
     }
-
     // 记得 return
     return {
       profile,

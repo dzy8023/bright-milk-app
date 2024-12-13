@@ -32,7 +32,7 @@ defineProps<{
       <image class="image" mode="aspectFill" :src="item.image"></image>
       <view class="row-view">
         <view class="name"> {{ item.name }} </view>
-        <uni-icons type="fire" :color="salesColor(item.sales!)" size="24rpx">{{
+        <uni-icons type="fire" :color="salesColor(item.sales!)" size="16">{{
           item.sales
         }}</uni-icons>
       </view>
@@ -42,8 +42,12 @@ defineProps<{
           <text>{{ item.price.toFixed(2) }}</text>
         </view>
         <view class="tag-view">
-          <uni-tag :inverted="true" text="会员折扣" type="warning" size="small" />
-          <text class="price small"> {{ item.discount?.toFixed(2) }}</text>
+          <uni-tag
+            :inverted="true"
+            :text="`会员折扣${item.discount?.toFixed(2)}`"
+            type="warning"
+            size="small"
+          />
         </view>
       </view>
     </navigator>

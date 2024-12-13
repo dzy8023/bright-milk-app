@@ -1,3 +1,6 @@
+.scroll-view {
+  flex: 1;
+}
 .panel {
   margin-top: 20rpx;
   background-color: #fff;
@@ -42,7 +45,7 @@
   .preview {
     height: 750rpx;
     position: relative;
-    .image {
+    image {
       width: 750rpx;
       height: 100%;
     }
@@ -79,6 +82,9 @@
       font-size: 34rpx;
       box-sizing: border-box;
       background-color: #35c8a9;
+      //两端对齐
+      display: flex;
+      justify-content: space-between;
     }
     .number {
       font-size: 56rpx;
@@ -158,47 +164,6 @@
     }
     .value {
       flex: 1;
-    }
-  }
-}
-
-/* 同类推荐 */
-.similar {
-  .content {
-    padding: 0 20rpx;
-    background-color: #f4f4f4;
-    display: flex;
-    flex-wrap: wrap;
-    .goods {
-      width: 340rpx;
-      padding: 24rpx 20rpx 20rpx;
-      margin: 20rpx 7rpx;
-      border-radius: 10rpx;
-      background-color: #fff;
-    }
-    .image {
-      width: 300rpx;
-      height: 260rpx;
-    }
-    .name {
-      height: 80rpx;
-      margin: 10rpx 0;
-      font-size: 26rpx;
-      color: #262626;
-    }
-    .price {
-      line-height: 1;
-      font-size: 20rpx;
-      color: #cf4444;
-    }
-    .number {
-      font-size: 26rpx;
-      margin-left: 2rpx;
-    }
-  }
-  navigator {
-    &:nth-child(even) {
-      margin-right: 0;
     }
   }
 }
