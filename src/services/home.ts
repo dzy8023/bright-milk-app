@@ -1,4 +1,4 @@
-import type { GoodItem } from '@/types/good'
+import type { GoodItem } from '@/types/item'
 import type { BannerItem, HomeHotItem } from '@/types/home'
 import type { PageQuery, PageResult } from '@/types/pageQuery'
 import { http } from '@/utils/http'

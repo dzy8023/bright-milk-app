@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { GoodItem } from '@/types/good'
+import { GoodItem } from '@/types/item'
 
 const endColor = `rgb(207, 68, 68)`
 const startColor = `rgb(144, 238, 144)`
@@ -22,17 +22,17 @@ defineProps<{
 }>()
 </script>
 <template>
-  <view class="guess">
+  <view class="content">
     <navigator
       v-for="item in list"
       :key="item.id"
-      class="guess-item"
+      class="goods"
       :url="`/pages/goods/goods?id=${item.id}`"
     >
       <image class="image" mode="aspectFill" :src="item.image"></image>
       <view class="row-view">
         <view class="name"> {{ item.name }} </view>
-        <uni-icons type="fire" :color="salesColor(item.sales!)" size="26rpx">{{
+        <uni-icons type="fire" :color="salesColor(item.sales!)" size="24rpx">{{
           item.sales
         }}</uni-icons>
       </view>

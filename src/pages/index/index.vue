@@ -4,7 +4,7 @@ import CustomNavbar from './components/CustomNavbar.vue'
 import HotPanel from './components/HotPanel.vue'
 import { ref } from 'vue'
 import { getHomeBannerApi, getHomeHotApi } from '@/services/home'
-import { onLoad, onShow } from '@dcloudio/uni-app'
+import { onLoad } from '@dcloudio/uni-app'
 import { useGuessList } from '@/composables'
 import PageSkeleton from './components/PageSkeleton.vue'
 //获取屏幕边界到安全区的距离
@@ -15,9 +15,6 @@ top = wx.getWindowInfo().safeArea.top
 // #ifndef MP-WEIXIN
 top = uni.getSystemInfoSync().safeAreaInsets?.top || 0
 // #endif
-onShow(() => {
-  console.log('onShow', top)
-})
 const bannerList = ref<BannerItem[]>([])
 const hotList = ref<HomeHotItem[]>([])
 const isInit = ref(true)
