@@ -17,7 +17,10 @@ const onGetPhoneNumberSimple = async () => {
     const memberStore = useMemberStore()
     memberStore.setProfile(res.result)
     //跳转到我的页面tabbar页不是普通页面
-    uni.navigateBack()
+    // uni.navigateBack()
+    uni.switchTab({
+      url: '/pages/my/my',
+    })
   }, 1000)
 }
 
