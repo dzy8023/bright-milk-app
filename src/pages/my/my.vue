@@ -2,7 +2,7 @@
 //获取屏幕边界到安全区域的距离
 import { useSafeAreaTop } from '@/composables'
 const statusBarHeight = useSafeAreaTop()
-import { useMemberStore } from '@/store'
+import { useMemberStore } from '@/stores'
 import { ref } from 'vue'
 
 // 订单选项

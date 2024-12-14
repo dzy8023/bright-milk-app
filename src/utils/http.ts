@@ -1,4 +1,4 @@
-import { useMemberStore } from '@/store'
+import { useMemberStore } from '@/stores'
 
 const baseUrl = import.meta.env.VITE_APP_API_URL
 const timeout = import.meta.env.VITE_APP_API_TIMEOUT

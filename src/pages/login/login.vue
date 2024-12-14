@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { postLoginApi, postLoginWXMinApi } from '@/services/login'
-import { useMemberStore } from '@/store'
+import { useMemberStore } from '@/stores'
 import { ref } from 'vue'
 
 //模拟手机号码快捷登陆

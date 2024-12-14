@@ -1,6 +1,6 @@
 import { createSSRApp } from 'vue'
-import pinia from './store'
-import store from './store'
+import pinia from './stores'
+import store from './stores'
 
 import App from './App.vue'
 export function createApp() {

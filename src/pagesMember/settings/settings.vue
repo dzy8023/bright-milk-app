@@ -1,7 +1,7 @@
 // src/pagesMember/settings/settings.vue
 
 <script setup lang="ts">
-import { useMemberStore } from '@/store'
+import { useMemberStore } from '@/stores'
 
 const memberStore = useMemberStore()
 // 退出登录
