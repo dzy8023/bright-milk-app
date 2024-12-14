@@ -12,19 +12,19 @@ export type LoginResult = {
   nickname?: string
   /**登录凭证 */
   token: string
+  /**余额 */
+  balance?: number
+  /**积分 */
+  integration?: number
 }
 
 /**用户信息 */
-export type ProfileDetail = Omit<LoginResult, 'token' | 'phone'> & {
+export type ProfileDetail = Omit<LoginResult, 'token' | 'phone' | 'balance' | 'integration'> & {
   //复用LoginResult的属性，排除token
   /**生日 */
   birthday?: string
   /**性别 */
   gender?: Gender
-  /**余额 */
-  balance: number
-  /**积分 */
-  integration: number
 }
 /**性别 */
 export type Gender = '男' | '女'

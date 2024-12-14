@@ -19,13 +19,19 @@ const onLogout = () => {
     },
   })
 }
+const onLogin = () => {
+  console.log('onLogin')
+  uni.navigateTo({
+    url: '/pages/login/login',
+  })
+}
 </script>
 
 <template>
   <view class="viewport">
     <!-- 列表1 -->
     <view v-if="memberStore.profile" class="list">
-      <navigator url="./address/address" hover-class="none" class="item arrow">
+      <navigator url="/pagesMember/address/address" hover-class="none" class="item arrow">
         我的收货地址
       </navigator>
     </view>
@@ -42,6 +48,9 @@ const onLogout = () => {
     <!-- 操作按钮 -->
     <view v-if="memberStore.profile" class="action">
       <view class="button" @tap="onLogout">退出登录</view>
+    </view>
+    <view v-else class="action">
+      <view class="button" @tap="onLogin">去登陆</view>
     </view>
   </view>
 </template>

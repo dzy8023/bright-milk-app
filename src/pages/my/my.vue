@@ -3,6 +3,7 @@
 import { useSafeAreaTop } from '@/composables'
 const statusBarHeight = useSafeAreaTop()
 import { useMemberStore } from '@/store'
+import { ref } from 'vue'
 
 // 订单选项
 const orderTypes = [
@@ -12,6 +13,8 @@ const orderTypes = [
   { type: 4, text: '待评价', icon: 'icon-comment' },
 ]
 const memberStore = useMemberStore()
+const iconB = ref(true)
+const iconI = ref(true)
 </script>
 
 <template>
@@ -76,6 +79,37 @@ const memberStore = useMemberStore()
         <!-- 客服 -->
         <button class="contact icon-handset" open-type="contact">售后</button>
         <!-- #endif -->
+      </view>
+    </view>
+    <!-- 我的订单 -->
+    <view class="account">
+      <view class="title">
+        我的账户
+        <navigator class="navigator" hover-class="none">
+          前往积分商城<text class="icon-right"></text>
+        </navigator>
+      </view>
+      <view class="section">
+        <view class="text">
+          <!-- 根据余额长度显示* -->
+          <uni-icons
+            class="icon"
+            :type="iconB ? 'eye' : 'eye-slash'"
+            size="24"
+            @click="iconB = !iconB"
+          />
+          <text>余额：{{ iconB ? memberStore.profile?.balance?.toFixed(2) || 0 : '***' }}</text>
+        </view>
+        <view class="text">
+          <!-- 根据余额长度显示* -->
+          <uni-icons
+            class="iconI"
+            :type="iconI ? 'eye' : 'eye-slash'"
+            size="24"
+            @click="iconI = !iconI"
+          />
+          <text>积分：{{ iconI ? memberStore.profile?.integration || 0 : '***' }}</text>
+        </view>
       </view>
     </view>
     <!-- 猜你喜欢 -->
@@ -216,7 +250,42 @@ page {
     }
   }
 }
+.account {
+  position: relative;
+  padding: 30rpx;
+  margin: 50rpx 20rpx 0;
+  background-color: #fff;
+  border-radius: 10rpx;
+  box-shadow: 0 4rpx 6rpx rgba(240, 240, 240, 0.6);
+  .title {
+    height: 40rpx;
+    line-height: 40rpx;
+    font-size: 28rpx;
+    color: #1e1e1e;
 
+    .navigator {
+      font-size: 24rpx;
+      color: #939393;
+      float: right;
+    }
+  }
+  .section {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 40rpx 20rpx 10rpx;
+    .text {
+      display: flex;
+      align-items: center;
+      font-size: 30rpx;
+      color: #333;
+      text-align: center;
+      .icon {
+        margin-right: 10rpx;
+      }
+    }
+  }
+}
 /* 猜你喜欢 */
 .guess {
   background-color: #f7f7f8;
