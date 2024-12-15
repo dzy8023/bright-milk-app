@@ -16,6 +16,7 @@ import {
 } from '@/services/order'
 import { OrderState, orderStateList } from '@/services/constants'
 import { getPayMockApi, getPayWxPayMiniPayApi } from '@/services/pay'
+import PageSkeleton from './components/PageSkeleton.vue'
 //安全距离
 const bottom = useSafeAreaBottom()
 let top = 0,
@@ -414,7 +415,7 @@ onLoad(() => {
     </template>
     <template v-else>
       <!-- 骨架屏组件 -->
-      <!-- <PageSkeleton /> -->
+      <PageSkeleton />
     </template>
   </scroll-view>
   <!-- 取消订单弹窗 -->
