@@ -3,7 +3,7 @@ import { useGuessList } from '@/composables'
 
 import { onLoad, onReady, onShow } from '@dcloudio/uni-app'
 import { ref } from 'vue'
-import PageSkeleton from './components/PageSkeleton.vue'
+// import PageSkeleton from './components/PageSkeleton.vue'
 import { useSafeAreaBottom } from '@/composables'
 import type { OrderLogisticResult, OrderResult } from '@/types/order'
 import {
@@ -71,7 +71,7 @@ const getMemberOrderByIdData = async () => {
   order.value = res.result
   if (
     [OrderState.DaiPingJia, OrderState.YiWanCheng, OrderState.DaiShouHuo].includes(
-      order.value!.orderState,
+      order.value!.status,
     )
   ) {
     getMemberOrderLogisticsByIdData()
@@ -80,7 +80,7 @@ const getMemberOrderByIdData = async () => {
 //倒计时结束
 const onTimeUp = () => {
   //修改订单状态为已取消
-  order.value!.orderState = OrderState.YiQuXiao
+  order.value!.status = OrderState.YiQuXiao
 }
 //支付订单
 const onOrderPay = async () => {
@@ -101,7 +101,7 @@ const onOrderSend = async () => {
   if (isDev) {
     await getMemberOrderConsignmentByIdApi(query.id)
     uni.showToast({ title: '模拟发货成功', icon: 'success' })
-    order.value!.orderState = OrderState.DaiShouHuo
+    order.value!.status = OrderState.DaiShouHuo
   }
 }
 //确认收货
@@ -129,7 +129,7 @@ const onOrderCancel = async () => {
       if (res.confirm) {
         await getMemberOrderCancelByIdApi(query.id, { cancelReason: reason.value })
         //修改订单状态为已取消
-        order.value!.orderState = OrderState.YiQuXiao
+        order.value!.status = OrderState.YiQuXiao
       }
     },
   })
@@ -244,7 +244,7 @@ onLoad(() => {
       <!-- 订单状态 -->
       <view class="overview" :style="{ paddingTop: top2 + 'px' }">
         <!-- 待付款状态:展示去支付按钮和倒计时 -->
-        <template v-if="order?.orderState === OrderState.DaiFuKuan">
+        <template v-if="order?.status === OrderState.DaiFuKuan">
           <view class="status icon-clock">等待付款</view>
           <view class="tips">
             <text class="money">应付金额: ¥ {{ order.payMoney.toFixed(2) }}</text>
@@ -263,7 +263,7 @@ onLoad(() => {
         <!-- 其他订单状态:展示再次购买按钮 -->
         <template v-else>
           <!-- 订单状态文字 -->
-          <view class="status"> {{ orderStateList[order.orderState].text }} </view>
+          <view class="status"> {{ orderStateList[order.status].text }} </view>
           <view class="button-group">
             <navigator
               class="button"
@@ -274,7 +274,7 @@ onLoad(() => {
             </navigator>
             <!-- 待发货状态：模拟发货,开发期间使用,用于修改订单状态为已发货 -->
             <view
-              v-if="isDev && order.orderState === OrderState.DaiFaHuo"
+              v-if="isDev && order.status === OrderState.DaiFaHuo"
               class="button"
               @tap="onOrderSend"
             >
@@ -282,7 +282,7 @@ onLoad(() => {
             >
             <!-- 待收货状态：展示确认收货按钮 -->
             <view
-              v-else-if="order.orderState === OrderState.DaiShouHuo"
+              v-else-if="order.status === OrderState.DaiShouHuo"
               class="button"
               @tap="onOrderConfirm"
             >
@@ -302,8 +302,8 @@ onLoad(() => {
         </view>
         <!-- 用户收货地址 -->
         <view class="locate">
-          <view class="user">{{ order.receiverContact + ' ' + order.receiverMobile }} </view>
-          <view class="address"> {{ order.receiverAddress }} </view>
+          <view class="user">{{ order.userAddress?.name + ' ' + order.userAddress?.phone }} </view>
+          <view class="address"> {{ order.userAddress?.address }} </view>
         </view>
       </view>
 
@@ -321,17 +321,23 @@ onLoad(() => {
             <view class="meta">
               <view class="name ellipsis">{{ item.name }}</view>
               <view class="type">{{ item.attrsText }}</view>
-              <view class="price">
+              <view class="prices">
+                <view class="pay-price symbol">{{
+                  item.price ? item.price.toFixed(2) : (item.price - item.discount).toFixed(2)
+                }}</view>
+                <view class="price symbol">{{ item.price.toFixed(2) }}</view>
+              </view>
+              <!-- <view class="price">
                 <view class="actual">
                   <text class="symbol">¥</text>
-                  <text>{{ item.curPrice }}</text>
+                  <text>{{ item.price.toFixed(2) }}</text>
                 </view>
-              </view>
+              </view> -->
               <view class="quantity">x{{ item.quantity }}</view>
             </view>
           </navigator>
           <!-- 待评价状态:展示按钮 -->
-          <view v-if="order.orderState === OrderState.DaiPingJia" class="action">
+          <view v-if="order.status === OrderState.DaiPingJia" class="action">
             <view class="button primary">申请售后</view>
             <navigator url="" class="button"> 去评价 </navigator>
           </view>
@@ -340,11 +346,16 @@ onLoad(() => {
         <view class="total">
           <view class="row">
             <view class="text">商品总价: </view>
-            <view class="symbol">{{ order.totalMoney.toFixed(2) }}</view>
+            <view class="symbol">{{ order.totalAmount.toFixed(2) }}</view>
           </view>
           <view class="row">
             <view class="text">运费: </view>
-            <view class="symbol">{{ order.postFee.toFixed(2) }}</view>
+            <view class="symbol">{{ order.postFee?.toFixed(2) }}</view>
+          </view>
+          <view class="row">
+            <view class="text">商品折扣: </view>
+            <text class="sub-text">-&nbsp;</text>
+            <view class="symbol">{{ order.discountAmount?.toFixed(2) }}</view>
           </view>
           <view class="row">
             <view class="text">应付金额: </view>
@@ -365,13 +376,13 @@ onLoad(() => {
       </view>
 
       <!-- 猜你喜欢 -->
-      <XtxGuess ref="guessRef" />
+      <GMmkGuess ref="guessRef" />
 
       <!-- 底部操作栏 -->
       <view class="toolbar-height" :style="{ paddingBottom: bottom + 'px' }"></view>
       <view class="toolbar" :style="{ paddingBottom: bottom + 'px' }">
         <!-- 待付款状态:展示支付按钮 -->
-        <template v-if="order?.orderState === OrderState.DaiFuKuan">
+        <template v-if="order?.status === OrderState.DaiFuKuan">
           <view class="button primary" @tap="onOrderPay"> 去支付 </view>
           <view class="button" @tap="popup?.open?.()"> 取消订单 </view>
         </template>
@@ -385,18 +396,14 @@ onLoad(() => {
             再次购买
           </navigator>
           <!-- 待收货状态：展示确认收货按钮 -->
-          <view
-            v-if="order.orderState === OrderState.DaiShouHuo"
-            class="button"
-            @tap="onOrderConfirm"
-          >
+          <view v-if="order.status === OrderState.DaiShouHuo" class="button" @tap="onOrderConfirm">
             确认收货
           </view>
           <!-- 待评价状态: 展示去评价 -->
-          <view v-if="order.orderState === OrderState.DaiPingJia" class="button"> 去评价 </view>
+          <view v-if="order.status === OrderState.DaiPingJia" class="button"> 去评价 </view>
           <!-- 待评价/已完成/已取消 状态: 展示删除订单 -->
           <view
-            v-if="order.orderState >= OrderState.DaiPingJia"
+            v-if="order.status >= OrderState.DaiPingJia"
             class="button delete"
             @tap="onOrderDelete"
           >
@@ -407,7 +414,7 @@ onLoad(() => {
     </template>
     <template v-else>
       <!-- 骨架屏组件 -->
-      <PageSkeleton />
+      <!-- <PageSkeleton /> -->
     </template>
   </scroll-view>
   <!-- 取消订单弹窗 -->
@@ -430,7 +437,7 @@ onLoad(() => {
 </template>
 
 <style lang="scss">
-@import './styles/detail.scss';
+@use './styles/detail.scss';
 page {
   display: flex;
   flex-direction: column;

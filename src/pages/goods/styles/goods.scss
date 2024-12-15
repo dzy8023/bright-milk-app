@@ -3,8 +3,8 @@
 }
 .panel {
   margin-top: 20rpx;
-  background-color: #fff;
   .title {
+    background-color: #fff;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -140,6 +140,7 @@
 
 /* 商品详情 */
 .detail {
+  background-color: #fff;
   padding-left: 20rpx;
   .content {
     margin-left: -20rpx;

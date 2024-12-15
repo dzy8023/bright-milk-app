@@ -28,33 +28,31 @@ export type OrderPreGoods = {
   /** 属性文字，例如“颜色:瓷白色 尺寸：8寸” */
   attrsText: string
   /** 数量 */
-  count: number
+  quantity: number
   /** id */
   id: string
   /** 商品名称 */
   name: string
   /** 实付单价 */
-  payPrice: string
+  payPrice?: number
   /** 图片 */
-  picture: string
+  image: string
   /** 原单价 */
-  price: string
+  price: number
+  /**商品折扣 */
+  discount: number
   /** SKUID */
   skuId: string
   /** 实付价格小计 */
   totalPayPrice: string
-  /** 小计总价 */
-  totalPrice: string
 }
 
 /** 提交订单 请求参数 */
 export type OrderCreateParams = {
   /** 所选地址Id */
-  addressId: string
-  /** 配送时间类型，1为不限，2为工作日，3为双休或假日 */
-  deliveryTimeType: number
+  addressId?: string
   /** 订单备注 */
-  buyerMessage: string
+  note?: string
   /** 商品集合[ 商品信息 ] */
   goods: {
     /** 数量 */
@@ -62,10 +60,8 @@ export type OrderCreateParams = {
     /** skuId */
     skuId: string
   }[]
-  /** 支付渠道：支付渠道，1支付宝、2微信--支付方式为在线支付时，传值，为货到付款时，不传值 */
-  payChannel: 1 | 2
-  /** 支付方式，1为在线支付，2为货到付款 */
-  payType: 1 | 2
+  /**配送方式 */
+  postType: number
 }
 
 /** 提交订单 返回信息 */
@@ -75,28 +71,34 @@ export type OrderCreateResult = {
 }
 /** 订单详情 返回信息 */
 export type OrderResult = {
-  /** 订单编号 */
+  /** 订单id */
   id: string
+  /**订单号 */
+  orderSn: string
   /** 订单状态，1为待付款、2为待发货、3为待收货、4为待评价、5为已完成、6为已取消 */
-  orderState: OrderState
+  status: OrderState
+  /**配送方式 */
+  postType: number
   /** 倒计时--剩余的秒数 -1 表示已经超时，正数表示倒计时未结束 */
   countdown: number
-  /** 商品集合 [ 商品信息 ] */
-  skus: OrderSkuItem[]
-  /** 收货人 */
-  receiverContact: string
-  /** 收货人手机 */
-  receiverMobile: string
-  /** 收货人完整地址 */
-  receiverAddress: string
-  /** 下单时间 */
-  createTime: string
+  /**用户地址 */
+  userAddress?: Omit<AddressItem, 'id' | 'isDefault'>
   /** 商品总价 */
-  totalMoney: number
+  totalAmount: number
   /** 运费 */
-  postFee: number
+  postFee?: number
+  /**折扣总额 */
+  discountAmount: number
   /** 应付金额 */
   payMoney: number
+  /**商品总件数 */
+  totalNum: number
+  /** 商品集合 [ 商品信息 ] */
+  skus: OrderSkuItem[]
+  /**最迟支付时间 */
+  payLatestTime: string
+  /** 下单时间 */
+  createTime: string
 }
 
 /** 商品信息 */
@@ -112,7 +114,9 @@ export type OrderSkuItem = {
   /** 数量 */
   quantity: number
   /** 购买时单价 */
-  curPrice: number
+  price: number
+  /**折扣 */
+  discount: number
   /** 图片地址 */
   image: string
 }

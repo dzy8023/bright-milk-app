@@ -11,6 +11,7 @@ import {
   SkuPopupLocalData,
 } from '@/components/vk-data-goods-sku-popup/vk-data-goods-sku-popup'
 import PageSkeleton from './components/PageSkeleton.vue'
+import { postMemberCartApi } from '@/services/cart'
 
 // 获取屏幕边界到安全区域距离
 const bottom = useSafeAreaBottom()
@@ -112,11 +113,22 @@ const openSkuPopup = (val: SkuMode) => {
 const selectArrText = computed(() => {
   return skuPopupRef.value?.selectArr.join(' ').trim() || '请选择商品规格'
 })
-
 //加入购物车事件
-const onAddCart = async (e: SkuPopupEvent) => {}
+const onAddCart = async (e: SkuPopupEvent) => {
+  const res = await postMemberCartApi({ skuId: e._id, quantity: e.buy_num })
+  console.log('onAddCart', res)
+  uni.showToast({
+    title: '加入购物车成功',
+    icon: 'success',
+    duration: 1000,
+  })
+  isShowSku.value = false
+}
 //立即购买事件
-const onBuyNow = (e: SkuPopupEvent) => {}
+const onBuyNow = (e: SkuPopupEvent) => {
+  console.log('onBuyNow', e)
+  uni.navigateTo({ url: `/pagesOrder/create/create?skuId=${e._id}&count=${e.buy_num}` })
+}
 </script>
 
 <template>

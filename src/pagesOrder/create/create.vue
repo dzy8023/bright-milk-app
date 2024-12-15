@@ -65,11 +65,9 @@ const onSubmitOrder = async () => {
   }
   const res = await postMemberOrderApi({
     addressId: address.value?.id,
-    buyerMessage: buyerMessage.value,
-    deliveryTimeType: activeDelivery.value.type,
-    goods: orderPreData.value!.goods.map((v) => ({ count: v.count, skuId: v.skuId })),
-    payChannel: 2,
-    payType: 1,
+    note: buyerMessage.value,
+    postType: activeDelivery.value.type,
+    goods: orderPreData.value!.goods.map((v) => ({ count: v.quantity, skuId: v.skuId })),
   })
   console.log(res.result)
   // 跳转到订单详情页
@@ -112,15 +110,17 @@ onLoad(() => {
         class="item"
         hover-class="none"
       >
-        <image class="picture" :src="item.picture" />
+        <image class="picture" :src="item.image" />
         <view class="meta">
           <view class="name ellipsis"> {{ item.name }} </view>
           <view class="attrs">{{ item.attrsText }}</view>
           <view class="prices">
-            <view class="pay-price symbol">{{ item.payPrice }}</view>
-            <view class="price symbol">{{ item.price }}</view>
+            <view class="pay-price symbol">{{
+              item.payPrice ? item.payPrice.toFixed(2) : (item.price - item.discount).toFixed(2)
+            }}</view>
+            <view class="price symbol">{{ item.price.toFixed(2) }}</view>
           </view>
-          <view class="count">x{{ item.count }}</view>
+          <view class="count">x{{ item.quantity }}</view>
         </view>
       </navigator>
     </view>
