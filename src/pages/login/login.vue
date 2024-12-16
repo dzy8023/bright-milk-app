@@ -1,29 +1,35 @@
 <script setup lang="ts">
 import { postLoginApi, postLoginWXMinApi } from '@/services/login'
 import { useMemberStore } from '@/stores'
+import { LoginResult } from '@/types/member'
 import { ref } from 'vue'
 
 //模拟手机号码快捷登陆
 const onGetPhoneNumberSimple = async () => {
   const res = await postLoginWXMinApi(import.meta.env.VITE_SIMPLE_PHONE)
   console.log(res.result)
+  loginSuccess(res.result)
+}
+const loginSuccess = (res: LoginResult) => {
   uni.showToast({
-    title: '模拟登陆成功',
+    title: '登录成功',
     icon: 'success',
     mask: true,
   })
   setTimeout(() => {
     //保存会员信息
     const memberStore = useMemberStore()
-    memberStore.setProfile(res.result)
+    memberStore.setProfile(res)
     //跳转到我的页面tabbar页不是普通页面
-    // uni.navigateBack()
-    uni.switchTab({
-      url: '/pages/my/my',
-    })
+    if (getCurrentPages().length === 1) {
+      uni.switchTab({
+        url: '/pages/my/my',
+      })
+    } else {
+      uni.navigateBack()
+    }
   }, 1000)
 }
-
 //手机号密码登录
 const form = ref({
   phone: '',
@@ -49,21 +55,7 @@ const login = async () => {
       await formRef.value?.validate!()
       const res = await postLoginApi(form.value)
       console.log(res.result)
-      uni.showToast({
-        title: '登录成功',
-        icon: 'success',
-        mask: true,
-      })
-      setTimeout(() => {
-        //保存会员信息
-        const memberStore = useMemberStore()
-        memberStore.setProfile(res.result)
-        //跳转到我的页面tabbar页不是普通页面
-        // uni.navigateBack()
-        uni.switchTab({
-          url: '/pages/my/my',
-        })
-      }, 1000)
+      loginSuccess(res.result)
     } catch (error) {
       uni.showToast({
         title: '请输入正确的手机号码或密码',

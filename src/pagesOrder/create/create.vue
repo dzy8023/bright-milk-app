@@ -20,11 +20,21 @@ const query = defineProps<{
 
 // 订单备注
 const buyerMessage = ref('')
+//配送方式
+const postList = ref([
+  { type: '1', text: '到店自取' },
+  { type: '2', text: '送货上门' },
+])
+//修改配送方式
+const onchangePostType: UniHelper.RadioGroupOnChange = (e: UniHelper.RadioGroupOnChangeEvent) => {
+  postType.value = e.detail.value
+}
+const postType = ref('1')
 // 配送时间
 const deliveryList = ref([
-  { type: 1, text: '时间不限 (周一至周日)' },
-  { type: 2, text: '工作日送 (周一至周五)' },
-  { type: 3, text: '周末配送 (周六至周日)' },
+  { type: 1, text: '上午送 (07:00-08:00)' },
+  { type: 2, text: '下午送 (17:30-18:30)' },
+  { type: 3, text: '晚上送 (20:00-20:30)' },
 ])
 // 当前配送时间下标
 const activeIndex = ref(0)
@@ -57,21 +67,32 @@ const getMemebrOrderPreData = async () => {
   console.log(res.result)
 }
 const onSubmitOrder = async () => {
-  if (!address.value?.id) {
+  if (postType.value === '2' && !address.value?.id) {
     return uni.showToast({
       title: '请选择收货地址',
       icon: 'none',
     })
   }
-  const res = await postMemberOrderApi({
-    addressId: address.value?.id,
-    note: buyerMessage.value,
-    postType: activeDelivery.value.type,
-    goods: orderPreData.value!.goods.map((v) => ({ count: v.quantity, skuId: v.skuId })),
+  uni.showLoading({
+    title: '提交订单中',
+    mask: true,
   })
-  console.log(res.result)
-  // 跳转到订单详情页
-  uni.redirectTo({ url: `/pagesOrder/detail/detail?id=${res.result.id}` })
+  setTimeout(async () => {
+    const res = await postMemberOrderApi({
+      addressId: address.value?.id,
+      note: buyerMessage.value,
+      postType: Number(postType.value),
+      goods: orderPreData.value!.goods.map((v) => ({ count: v.quantity, skuId: v.skuId })),
+    })
+    uni.hideLoading()
+    console.log(res.result)
+    // 跳转到订单详情页
+    uni.redirectTo({ url: `/pagesOrder/detail/detail?id=${res.result.id}` })
+  }, 2000)
+}
+const onInput = (e: any) => {
+  buyerMessage.value = e
+  console.log(e)
 }
 onLoad(() => {
   getMemebrOrderPreData()
@@ -80,26 +101,43 @@ onLoad(() => {
 
 <template>
   <scroll-view scroll-y class="viewport" :style="{ paddingBottom: bottom + 'px' }">
-    <!-- 收货地址 -->
-    <navigator
-      v-if="address"
-      class="shipment"
-      hover-class="none"
-      url="/pagesMember/address/address?from=order"
-    >
-      <view class="user"> {{ address.name + ' | ' + address.phone }} </view>
-      <view class="address">{{ address.address }} </view>
-      <text class="icon icon-right"></text>
-    </navigator>
-    <navigator
-      v-else
-      class="shipment"
-      hover-class="none"
-      url="/pagesMember/address/address?from=order"
-    >
-      <view class="address"> 请选择收货地址 </view>
-      <text class="icon icon-right"></text>
-    </navigator>
+    <!-- 配送方式 -->
+    <view class="post-type">
+      <text class="text">配送方式</text>
+      <radio-group class="radio-group" @change="onchangePostType">
+        <label
+          v-for="item in postList"
+          :key="item.type"
+          class="label"
+          :class="{ active: item.type === postType }"
+        >
+          <radio :value="item.type" color="#27ba9b" :checked="postType === item.type" />
+          {{ item.text }}
+        </label>
+      </radio-group>
+    </view>
+    <template v-if="postType === '2'">
+      <!-- 收货地址 -->
+      <navigator
+        v-if="address"
+        class="shipment"
+        hover-class="none"
+        url="/pagesMember/address/address?from=order"
+      >
+        <view class="user"> {{ address.name + ' | ' + address.phone }} </view>
+        <view class="address">{{ address.address }} </view>
+        <text class="icon icon-right"></text>
+      </navigator>
+      <navigator
+        v-else
+        class="shipment"
+        hover-class="none"
+        url="/pagesMember/address/address?from=order"
+      >
+        <view class="address"> 请选择收货地址 </view>
+        <text class="icon icon-right"></text>
+      </navigator>
+    </template>
 
     <!-- 商品信息 -->
     <view class="goods">
@@ -129,18 +167,19 @@ onLoad(() => {
     <view class="related">
       <view class="item">
         <text class="text">配送时间</text>
-        <picker :range="deliveryList" range-key="text" @change="onChangeDelivery">
+        <picker class="ipicker" :range="deliveryList" range-key="text" @change="onChangeDelivery">
           <view class="icon-fonts picker">{{ activeDelivery.text }}</view>
         </picker>
       </view>
-      <view class="item">
+      <view class="item row">
         <text class="text">订单备注</text>
-        <input
-          v-model="buyerMessage"
-          class="input"
-          :cursor-spacing="30"
-          placeholder="选题，建议留言前先与商家沟通确认"
-        />
+        <fuck-textarea
+          :border="false"
+          class="text-area"
+          placeholder="选填，建议留言前先与商家沟通确认"
+          maxlength="100"
+          @input="onInput"
+        ></fuck-textarea>
       </view>
     </view>
 
@@ -164,7 +203,13 @@ onLoad(() => {
     <view class="total-pay symbol">
       <text class="number">{{ orderPreData?.summary.totalPayPrice.toFixed(2) }}</text>
     </view>
-    <view class="button" :class="{ disabled: !address?.id }" @tap="onSubmitOrder"> 提交订单 </view>
+    <view
+      class="button"
+      :class="{ disabled: postType === '2' && !address?.id }"
+      @tap="onSubmitOrder"
+    >
+      提交订单
+    </view>
   </view>
 </template>
 
@@ -285,7 +330,28 @@ page {
     }
   }
 }
-
+.post-type {
+  margin: 20rpx;
+  padding: 20rpx;
+  border-radius: 10rpx;
+  background-color: #fff;
+  font-size: 26rpx;
+  .text {
+    display: flex;
+    margin-bottom: 10rpx;
+  }
+  .radio-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .label {
+    margin-right: 20rpx;
+    color: #333;
+  }
+  .active {
+    color: #27ba9b;
+  }
+}
 .related {
   margin: 20rpx;
   padding: 0 20rpx;
@@ -293,8 +359,8 @@ page {
   background-color: #fff;
 
   .item {
+    width: 100%;
     display: flex;
-    justify-content: space-between;
     align-items: center;
     min-height: 80rpx;
     font-size: 26rpx;
@@ -309,11 +375,25 @@ page {
     font-size: 26rpx;
     color: #999;
   }
-
+  .row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
   .item .text {
     width: 125rpx;
   }
-
+  .item .text-area {
+    // box-sizing: border-box; /* 确保内边距和边框包含在总宽度中 */
+    margin: 20rpx 0;
+    border-radius: 10rpx;
+    padding: 10rpx;
+    width: 97%;
+    background-color: #f4f4f4;
+    font-size: 26rpx;
+  }
+  .ipicker {
+    margin-left: auto;
+  }
   .picker {
     color: #666;
   }

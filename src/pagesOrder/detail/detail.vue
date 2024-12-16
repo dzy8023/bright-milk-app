@@ -70,12 +70,14 @@ const orderLogisticData = ref<OrderLogisticResult>()
 const getMemberOrderByIdData = async () => {
   const res = await getMemberOrderByIdApi(query.id)
   order.value = res.result
+  console.log(res.result)
   if (
     [OrderState.DaiPingJia, OrderState.YiWanCheng, OrderState.DaiShouHuo].includes(
       order.value!.status,
     )
   ) {
-    getMemberOrderLogisticsByIdData()
+    //获取物流信息
+    // getMemberOrderLogisticsByIdData()
   }
 }
 //倒计时结束
@@ -323,10 +325,8 @@ onLoad(() => {
               <view class="name ellipsis">{{ item.name }}</view>
               <view class="type">{{ item.attrsText }}</view>
               <view class="prices">
-                <view class="pay-price symbol">{{
-                  item.price ? item.price.toFixed(2) : (item.price - item.discount).toFixed(2)
-                }}</view>
-                <view class="price symbol">{{ item.price.toFixed(2) }}</view>
+                <view class="pay-price symbol">{{ item.price.toFixed(2) }}</view>
+                <view class="price symbol">{{ (item.price - item.discount).toFixed(2) }}</view>
               </view>
               <!-- <view class="price">
                 <view class="actual">
@@ -370,7 +370,8 @@ onLoad(() => {
         <view class="title">订单信息</view>
         <view class="row">
           <view class="item">
-            订单编号: {{ query.id }} <text class="copy" @tap="onCopy(query.id)">复制</text>
+            订单编号: {{ order.orderSn }}
+            <text class="copy" @tap="onCopy(order.orderSn)">复制</text>
           </view>
           <view class="item">下单时间: {{ order.createTime }}</view>
         </view>

@@ -8,6 +8,9 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         api: 'modern-compiler', // or 'modern'
+        sassOptions: {
+          silenceDeprecations: ['legacy-js-api'], // 添加此选项以静默过时警告
+        },
       },
     },
   },
